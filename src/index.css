@@ -1,0 +1,108 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Syne:wght@700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-syne: "Syne", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  --color-background: #050505;
+  --color-foreground: #ffffff;
+  --color-card: #0f0f0f;
+  --color-card-foreground: #ffffff;
+  --color-muted: #1a1a1a;
+  --color-muted-foreground: #737373;
+  --color-accent: #ffffff;
+  --color-accent-foreground: #000000;
+  --color-border: #262626;
+}
+
+@layer base {
+  body {
+    @apply bg-background text-foreground font-sans antialiased selection:bg-white selection:text-black;
+  }
+}
+
+.glass {
+  @apply bg-card/40 backdrop-blur-xl border border-white/5;
+}
+
+.premium-shadow {
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.03), 0 20px 40px -10px rgba(0, 0, 0, 0.8);
+}
+
+.studio-shadow {
+  box-shadow: 12px 12px 24px rgba(0, 0, 0, 0.8);
+}
+
+.premium-gradient {
+  background: linear-gradient(to top, #2b2b2b 0%, #2d2d2d 5%, #2f2f2f 10%, #323232 15%, #353535 20%, #393939 25%, #3d3d3d 30%, #424242 35%, #474747 40%, #4d4d4d 45%, #545454 50%, #5c5c5c 55%, #656565 60%, #6f6f6f 65%, #7a7a7a 70%, #868686 75%, #949494 80%, #a3a3a3 85%, #b5b5b5 90%, #c9c9c9 95%, #ffffff 100%);
+  border: none !important;
+}
+
+/* Mobile Zoom-out 40% */
+@media (max-width: 768px) {
+  #root {
+    transform: scale(0.6);
+    transform-origin: top center;
+    width: 166.66vw;
+    height: 166.66vh;
+    position: fixed;
+    top: 0;
+    left: 50%;
+    margin-left: -83.33vw;
+  }
+  body {
+    overflow: hidden;
+  }
+}
+
+/* PC App Centering */
+@media (min-width: 1024px) {
+  .app-container {
+    max-width: 1600px;
+    margin: 0 auto;
+    border-left: 1px solid rgba(255, 255, 255, 0.05);
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 0 100px rgba(0, 0, 0, 0.8);
+    position: relative;
+    background: var(--background);
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-muted rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-muted-foreground/30;
+}
+
+html.lenis {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}

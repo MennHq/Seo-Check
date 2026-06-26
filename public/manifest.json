@@ -1,0 +1,17 @@
+{
+  "name": "MENN Tracker",
+  "short_name": "MENN",
+  "description": "Elite productivity tracker for high-performance individuals.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#0a0a0a",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/2098/2098402.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
