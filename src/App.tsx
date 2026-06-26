@@ -24,6 +24,7 @@ import { useTasks } from './hooks/useTasks';
 import { Dashboard } from './components/Dashboard';
 import { TaskCard } from './components/TaskCard';
 import { PremiumButton } from './components/PremiumButton';
+import { LandingPage } from './components/LandingPage';
 import { format, isToday, parseISO, startOfDay, isSameDay } from 'date-fns';
 import { cn } from './lib/utils';
 import Lenis from 'lenis';
@@ -67,13 +68,26 @@ export default function App() {
     }
   };
 
-  // Auth State
-  const [isAuthenticated, setIsAuthenticated] = useState(() => {
-    return localStorage.getItem('menn_auth') === 'true';
+  // Auth State (Default to true, no passwords or signups required!)
+  const [isAuthenticated, setIsAuthenticated] = useState(true);
+  
+  // Routing State
+  const [showLanding, setShowLanding] = useState(() => {
+    return typeof window !== 'undefined' && window.location.hash !== '#app';
   });
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [authError, setAuthError] = useState('');
+
+  useEffect(() => {
+    const handleHashChange = () => {
+      setShowLanding(window.location.hash !== '#app');
+    };
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
+
+  const handleLaunchWorkspace = () => {
+    window.location.hash = 'app';
+    setShowLanding(false);
+  };
 
   // Lenis Scroll
   useEffect(() => {
@@ -94,20 +108,9 @@ export default function App() {
     };
   }, []);
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (email === 'pro679715@gmail.com' && password === 'momentumgonnapaycountless!') {
-      setIsAuthenticated(true);
-      localStorage.setItem('menn_auth', 'true');
-      setAuthError('');
-    } else {
-      setAuthError('Invalid credentials. Elite access only.');
-    }
-  };
-
   const handleLogout = () => {
-    setIsAuthenticated(false);
-    localStorage.removeItem('menn_auth');
+    window.location.hash = '';
+    setShowLanding(true);
   };
 
   const filteredTasks = useMemo(() => {
@@ -160,62 +163,8 @@ export default function App() {
     }
   };
 
-  if (!isAuthenticated) {
-    return (
-      <div className="h-screen w-full bg-background flex items-center justify-center p-6 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.05),transparent)]">
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="glass p-10 rounded-3xl w-full max-w-md studio-shadow border-white/10"
-        >
-          <div className="flex flex-col items-center mb-10">
-            <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center text-black font-black text-3xl shadow-2xl mb-6">
-              M
-            </div>
-            <h1 className="text-3xl font-syne font-extrabold tracking-tighter uppercase italic">MENN ACCESS</h1>
-            <p className="text-muted-foreground text-xs font-mono uppercase tracking-widest mt-2">Elite Discipline Protocol</p>
-          </div>
-
-          <form onSubmit={handleLogin} className="space-y-6">
-            <div className="space-y-2">
-              <label className="text-[10px] uppercase tracking-widest font-mono text-muted-foreground ml-2">Email Address</label>
-              <div className="relative">
-                <User size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
-                <input 
-                  type="email" 
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-white/5 border border-white/5 rounded-2xl py-4 pl-12 pr-4 focus:outline-none focus:ring-2 focus:ring-white/10 transition-all"
-                  placeholder="pro679715@gmail.com"
-                />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-[10px] uppercase tracking-widest font-mono text-muted-foreground ml-2">Access Key</label>
-              <div className="relative">
-                <Lock size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
-                <input 
-                  type="password" 
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-white/5 border border-white/5 rounded-2xl py-4 pl-12 pr-4 focus:outline-none focus:ring-2 focus:ring-white/10 transition-all"
-                  placeholder="••••••••••••"
-                />
-              </div>
-            </div>
-
-            {authError && (
-              <p className="text-red-500 text-[10px] uppercase tracking-widest font-mono text-center">{authError}</p>
-            )}
-
-            <PremiumButton type="submit" className="w-full py-5">
-              Initialize Protocol
-            </PremiumButton>
-          </form>
-        </motion.div>
-      </div>
-    );
+  if (showLanding) {
+    return <LandingPage onLaunch={handleLaunchWorkspace} />;
   }
 
   return (
